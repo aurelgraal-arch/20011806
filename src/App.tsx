@@ -1,46 +1,33 @@
-import { useEffect, useState } from "react"
-import { supabase } from "./supabaseClient"
-
-type PortalUser = {
-  profile_id: string
-  username: string | null
-  is_active: boolean
-}
+import { useEffect, useState } from 'react'
+import { supabase } from './supabaseClient'
 
 export default function App() {
-  const [users, setUsers] = useState<PortalUser[]>([])
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const loadUsers = async () => {
-      const { data, error } = await supabase
-        .from("portal_users")
-        .select("*")
-
-      if (error) console.error(error)
-      else setUsers(data || [])
-
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
       setLoading(false)
-    }
-    loadUsers()
+    })
   }, [])
 
-  if (loading) return <div style={{ padding: 20 }}>Caricamento portale…</div>
+  if (loading) return <p>Caricamento...</p>
+
+  if (!user) {
+    return (
+      <div>
+        <h1>Accesso al portale</h1>
+        <p>Inserisci la tua sequenza per accedere</p>
+        {/* qui collegherai il tuo sistema di accesso */}
+      </div>
+    )
+  }
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Portal Network</h1>
-      {users.length === 0 ? (
-        <p>Nessun utente presente</p>
-      ) : (
-        <ul>
-          {users.map(u => (
-            <li key={u.profile_id}>
-              {u.username ?? "Anonimo"} — {u.is_active ? "🟢 Attivo" : "⚪ Inattivo"}
-            </li>
-          ))}
-        </ul>
-      )}
+    <div>
+      <h1>Portale</h1>
+      <p>Benvenuto {user.email}</p>
     </div>
   )
 }
