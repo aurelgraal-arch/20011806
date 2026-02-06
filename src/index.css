@@ -1,43 +1,8 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #0f172a;
-  color: #e5e7eb;
+  font-family: Arial, sans-serif;
 }
 
-.container {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-h1 {
-  margin-bottom: 1.5rem;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: #020617;
-  padding: 1rem;
-  margin-bottom: 0.75rem;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.active {
-  color: #22c55e;
-}
-
-.inactive {
-  color: #ef4444;
+input:focus {
+  outline: none;
 }
