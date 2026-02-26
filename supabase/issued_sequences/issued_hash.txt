@@ -1,0 +1,4 @@
+# format: hash,email
+# for testing include some lines
+abc123,user1@example.com
+hash456,user2@example.com
