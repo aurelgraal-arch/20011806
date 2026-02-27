@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 
 const ITEMS = [
@@ -17,6 +17,7 @@ const ITEMS = [
 
 export const Topbar: React.FC = () => {
   const logout = useAuthStore((s) => s.logout)
+  const navigate = useNavigate()
   return (
     <header className="h-16 bg-black border-b border-accent2 flex items-center px-6 fixed top-0 left-0 right-0 z-50">
       <nav className="flex space-x-6">
@@ -38,7 +39,7 @@ export const Topbar: React.FC = () => {
         <button
           onClick={() => {
             logout()
-            window.location.href = '/login'
+            navigate('/login', { replace: true })
           }}
           className="text-accent2 hover:text-accent transition"
         >
