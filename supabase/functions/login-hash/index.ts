@@ -1,4 +1,7 @@
-import { serve } from 'https://deno.land/x/sift@0.6.0/mod.ts'
+// @ts-ignore Deno runtime type definitions
+/// <reference lib="deno.ns" />
+// @ts-ignore Deno standard library
+import { serve } from "std/http/server"
 
 // Edge function implementing hash-based authentication.
 // It reads `issued_sequences/issued_hash.txt` in the repo, which maps hashes to
@@ -9,9 +12,10 @@ import { serve } from 'https://deno.land/x/sift@0.6.0/mod.ts'
 // Ensure you have SERVICE_ROLE_KEY in your environment for the function.
 
 async function loadMap(): Promise<Map<string, string>> {
+  // @ts-ignore Deno API
   const raw = await Deno.readTextFile('./issued_sequences/issued_hash.txt')
   const map = new Map<string, string>()
-  raw.split('\n').forEach((line) => {
+  raw.split('\n').forEach((line: string) => {
     const trimmed = line.trim()
     if (!trimmed || trimmed.startsWith('#')) return
     const [hash, email] = trimmed.split(',')
@@ -22,7 +26,7 @@ async function loadMap(): Promise<Map<string, string>> {
   return map
 }
 
-serve(async (req) => {
+serve(async (req: Request) => {
   try {
     const { hash } = await req.json()
     if (!hash) {
@@ -35,8 +39,10 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Invalid hash' }), { status: 401 })
     }
 
+    // @ts-ignore Deno API
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    // @ts-ignore Deno API
+    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!
 
     // attempt to sign in using the hash as password
     const resp = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
@@ -53,7 +59,8 @@ serve(async (req) => {
     }
 
     return new Response(JSON.stringify(data), { status: 200 })
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+    return new Response(JSON.stringify({ error: errorMessage }), { status: 500 })
   }
 })

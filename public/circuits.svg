@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">
+  <defs>
+    <pattern id="circuits" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M0 0 L100 0 L100 100" stroke="#50C878" stroke-width="0.5" opacity="0.2" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#circuits)" />
+</svg>

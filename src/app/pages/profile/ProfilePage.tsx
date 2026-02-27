@@ -5,11 +5,11 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '../../core/store/authStore'
-import { Card, StatCard, ProgressBar, Badge, Button, Skeleton } from '../../components/ui'
-import { Avatar } from '../../components/ui'
+import { Card, StatCard, ProgressBar, Badge, Button, Skeleton } from '@components/ui'
+import { Avatar } from '@components/ui'
 import { ReputationEngine } from '../../core/engines/reputationEngine'
 import { userService } from '../../core/services/userService'
-import { useToast } from '../../hooks/useToast'
+import { useToast } from '@hooks/useToast'
 
 export const ProfilePage: React.FC = () => {
   const { user, refreshSession } = useAuthStore()
@@ -23,10 +23,10 @@ export const ProfilePage: React.FC = () => {
     setLoading(true)
     userService
       .getProfile(user.id)
-      .then((p) => {
+      .then((p: any) => {
         setProfileData(p)
       })
-      .catch((e) => {
+      .catch((e: any) => {
         const msg = e instanceof Error ? e.message : 'Failed to load profile'
         addToast(msg, 'error')
       })
@@ -34,10 +34,10 @@ export const ProfilePage: React.FC = () => {
 
     userService
       .getUserStats(user.id)
-      .then((_s) => {
+      .then((_s: any) => {
         // stats loaded but not needed in ui yet
       })
-      .catch((e) => {
+      .catch((e: any) => {
         const msg = e instanceof Error ? e.message : 'Stats load failed'
         addToast(msg, 'error')
       })
@@ -61,7 +61,6 @@ export const ProfilePage: React.FC = () => {
     )
   }
 
-  const userLevel = ReputationEngine.getUserLevel(profileData.reputation)
   const progressData = ReputationEngine.getProgressToNextLevel(profileData.reputation)
 
   const statsData = [
@@ -129,11 +128,12 @@ export const ProfilePage: React.FC = () => {
         <div className="space-y-4">
           <div>
             <ProgressBar
-              progress={progressData.progress_percentage}
-              label={`Level ${progressData.current_level} → Level ${progressData.next_level}`}
+              value={progressData.progress}
+              max={100}
+              label={`Level ${Math.floor(progressData.progress / (100 / 10))} → Level ${Math.floor(progressData.progress / (100 / 10)) + 1}`}
             />
             <p className="text-sm text-slate-400 mt-2">
-              {progressData.next_level_required - progressData.current_rep} points needed to reach next level
+              {progressData.next - progressData.current} points needed to reach next level
             </p>
           </div>
 
@@ -178,7 +178,7 @@ export const ProfilePage: React.FC = () => {
           <Button variant="secondary" className="w-full text-left">
             Two-Factor Authentication
           </Button>
-          <Button variant="outline" className="w-full text-left">
+          <Button variant="secondary" className="w-full text-left">
             Download Data
           </Button>
           <Button variant="danger" className="w-full text-left">

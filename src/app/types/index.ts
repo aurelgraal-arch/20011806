@@ -1,11 +1,5 @@
 /**
- * Central export for all types
+ * Centralized types export
  */
 
 export * from './auth'
-export * from './user'
-export * from './mission'
-export * from './governance'
-export * from './activity'
-export * from './ranking'
-export * from './admin'

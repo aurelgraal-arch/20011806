@@ -11,11 +11,9 @@ export enum UserRole {
 
 export interface AuthUser {
   id: string
-  email: string
-  username: string
-  role: UserRole
-  created_at: string
-  updated_at: string
+  sequence_id: string
+  public_name: string
+  level: number
 }
 
 export interface AuthSession {
@@ -25,11 +23,8 @@ export interface AuthSession {
   error: string | null
 }
 
-export interface AuthCredentials {
-  // legacy email/password; not used with hash flow
-  email: string
-  password: string
-}
+// credentials are not used in this model; authentication via sequence_id only
+export interface AuthCredentials {}
 
 export interface SignUpData extends AuthCredentials {
   username: string

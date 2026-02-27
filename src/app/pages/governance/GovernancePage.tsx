@@ -1,14 +1,13 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useAuthStore } from '../../core/store/authStore'
 import { governanceService } from '../../core/services/governanceService'
-import { Card, Button, Badge, Skeleton } from '../../components/ui'
-import { useToast } from '../../hooks/useToast'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Card, Button, Badge, Skeleton } from '@components/ui'
+import { useToast } from '@hooks/useToast'
+import { useQuery } from '@tanstack/react-query'
 
 export const GovernancePage: React.FC = () => {
   const { user } = useAuthStore()
   const { addToast } = useToast()
-  const queryClient = useQueryClient()
 
   const { data: proposals, isLoading, error } = useQuery<any[]>({
     queryKey: ['proposals'],
@@ -16,18 +15,10 @@ export const GovernancePage: React.FC = () => {
     staleTime: 1000 * 30,
   })
 
-  useEffect(() => {
-    const unsub = governanceService.subscribeProposals((_p) => {
-      queryClient.invalidateQueries({ queryKey: ['proposals'] })
-    })
-    return () => unsub && unsub()
-  }, [queryClient])
-
   const handleVote = async (proposalId: string, vote: string) => {
     if (!user) return
     try {
-      await governanceService.vote(proposalId, user.id, vote, 1)
-      queryClient.invalidateQueries({ queryKey: ['proposals'] })
+      await governanceService.vote(proposalId, user.id, vote as 'yes' | 'no', 1)
       addToast('Vote recorded', 'success')
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Vote failed'

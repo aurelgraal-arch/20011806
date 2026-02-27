@@ -19,9 +19,12 @@ export const useAuthStore = create<AuthState>()(
         error: null,
 
         login: async (hash: string) => {
+          console.log('[Store] Login called with hash:', hash)
           set({ isLoading: true, error: null })
           try {
+            console.log('[Store] Calling authService.loginWithHash...')
             const user = await authService.loginWithHash(hash)
+            console.log('[Store] Login successful, user:', user.id)
             set({
               user,
               isAuthenticated: true,
@@ -30,6 +33,7 @@ export const useAuthStore = create<AuthState>()(
             return user
           } catch (error) {
             const message = error instanceof Error ? error.message : 'Login failed'
+            console.error('[Store] Login error:', message)
             set({ error: message, isLoading: false })
             throw new Error(message)
           }

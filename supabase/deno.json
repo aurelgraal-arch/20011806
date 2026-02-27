@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "std/": "https://deno.land/std@0.192.0/",
+    "std/http/server": "https://deno.land/std@0.192.0/http/server.ts"
+  },
+  "compilerOptions": {
+    "lib": ["deno.window", "deno.ns", "deno.unstable"],
+    "target": "ES2020",
+    "strict": false,
+    "jsx": "react-jsx"
+  },
+  "tasks": {
+    "deploy": "supabase functions deploy"
+  }
+}
