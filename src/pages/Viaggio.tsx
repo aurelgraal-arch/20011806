@@ -8,6 +8,8 @@ export const Viaggio: React.FC = () => {
   const [title, setTitle] = React.useState('')
   const [itinerary, setItinerary] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [mediaFile, setMediaFile] = React.useState<File | null>(null)
+  const [uploading, setUploading] = React.useState(false)
 
   React.useEffect(() => {
     fetchTrips()
@@ -31,20 +33,40 @@ export const Viaggio: React.FC = () => {
 
   const createTrip = async () => {
     if (!user) return
-    // Insert journey step directly into `journey_steps`
-    await supabase.from('journey_steps').insert([
-      {
-        user_id: user.id,
-        title,
-        reflection: itinerary,
-        description,
-        media_url: '',
-        media_type: '',
-      },
-    ])
-    setTitle('')
-    setItinerary('')
-    setDescription('')
+    setUploading(true)
+    try {
+      let media_url = ''
+      let media_type = ''
+      if (mediaFile) {
+        const filename = `${crypto.randomUUID()}_${mediaFile.name}`
+        const { data: uploadData, error: uploadError } = await supabase.storage.from('posts-media').upload(filename, mediaFile)
+        if (uploadError) {
+          console.error('Upload error', uploadError)
+        } else {
+          const { data: urlData } = await supabase.storage.from('posts-media').getPublicUrl(filename)
+          media_url = urlData?.publicUrl || ''
+          media_type = mediaFile.type || ''
+        }
+      }
+
+      await supabase.from('journey_steps').insert([
+        {
+          user_id: user.id,
+          title,
+          reflection: itinerary,
+          description,
+          media_url,
+          media_type,
+        },
+      ])
+
+      setTitle('')
+      setItinerary('')
+      setDescription('')
+      setMediaFile(null)
+    } finally {
+      setUploading(false)
+    }
   }
 
   const toggleJoin = async (tripId: string, joined: boolean) => {
@@ -84,11 +106,18 @@ export const Viaggio: React.FC = () => {
           placeholder="Descrizione"
           className="w-full mb-2 px-3 py-2 bg-[#111] border border-accent2 rounded"
         />
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={(e) => setMediaFile(e.target.files ? e.target.files[0] : null)}
+          className="w-full mb-2"
+        />
         <button
           onClick={createTrip}
-          className="bg-accent text-black px-4 py-2 rounded hover:bg-accent/90"
+          disabled={uploading}
+          className="bg-accent text-black px-4 py-2 rounded hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Crea
+          {uploading ? 'Caricamento…' : 'Crea'}
         </button>
       </div>
       {trips.length === 0 ? (

@@ -1,6 +1,8 @@
+
 import React from 'react'
 import { useAuthStore } from '../../store/authStore'
 import { useUserStore } from '../../store/userStore'
+import { useThemeStore } from '../../store/themeStore'
 
 export const Topbar: React.FC = () => {
   const user = useAuthStore((s) => s.user)
@@ -20,7 +22,22 @@ export const Topbar: React.FC = () => {
           />
         </div>
         <div className="text-accent2">💰 {walletBalance}</div>
+        <ThemeToggle />
       </div>
     </header>
+  )
+}
+
+const ThemeToggle: React.FC = () => {
+  const theme = useThemeStore((s) => s.theme)
+  const toggle = useThemeStore((s) => s.toggleTheme)
+  return (
+    <button
+      onClick={toggle}
+      className="px-3 py-1 bg-accent2 text-black rounded text-sm hover:opacity-90 transition"
+      aria-label="Toggle theme"
+    >
+      {theme === 'dark' ? 'Light' : 'Dark'}
+    </button>
   )
 }

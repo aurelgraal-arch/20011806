@@ -37,27 +37,51 @@ export const Forum: React.FC = () => {
   const [problem, setProblem] = React.useState('')
   const [solution, setSolution] = React.useState('')
   const [description, setDescription] = React.useState('')
+  const [mediaFile, setMediaFile] = React.useState<File | null>(null)
+  const [uploading, setUploading] = React.useState(false)
 
   const user = useAuthStore((s) => s.user)
 
   const submitPost = async () => {
     if (!user) return
-    // Insert directly into forum_posts table (no Edge Function)
-    await supabase.from('forum_posts').insert([
-      {
-        user_id: user.id,
-        title,
-        problem,
-        solution,
-        description,
-        media_url: '',
-        media_type: '',
-      },
-    ])
-    setTitle('')
-    setProblem('')
-    setSolution('')
-    setDescription('')
+    setUploading(true)
+    try {
+      let media_url = ''
+      let media_type = ''
+      if (mediaFile) {
+        const filename = `${crypto.randomUUID()}_${mediaFile.name}`
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from('posts-media')
+          .upload(filename, mediaFile)
+        if (uploadError) {
+          console.error('Upload error', uploadError)
+        } else {
+          const { data: urlData } = await supabase.storage.from('posts-media').getPublicUrl(filename)
+          media_url = urlData?.publicUrl || ''
+          media_type = mediaFile.type || ''
+        }
+      }
+
+      await supabase.from('forum_posts').insert([
+        {
+          user_id: user.id,
+          title,
+          problem,
+          solution,
+          description,
+          media_url,
+          media_type,
+        },
+      ])
+
+      setTitle('')
+      setProblem('')
+      setSolution('')
+      setDescription('')
+      setMediaFile(null)
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -90,11 +114,18 @@ export const Forum: React.FC = () => {
           placeholder="Descrizione"
           className="w-full mb-2 px-3 py-2 bg-[#111] border border-accent2 rounded"
         />
+        <input
+          type="file"
+          accept="image/*,video/*"
+          onChange={(e) => setMediaFile(e.target.files ? e.target.files[0] : null)}
+          className="w-full mb-2"
+        />
         <button
           onClick={submitPost}
-          className="bg-accent text-black px-4 py-2 rounded hover:bg-accent/90"
+          disabled={uploading}
+          className="bg-accent text-black px-4 py-2 rounded hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Pubblica
+          {uploading ? 'Caricamento…' : 'Pubblica'}
         </button>
       </div>
       {posts.length === 0 ? (
