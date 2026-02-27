@@ -33,21 +33,27 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-black relative">
-      <div className="absolute inset-0 opacity-5 bg-[url('/circuits.svg')]" />
-      <div className="absolute inset-0 flex items-center justify-center">
-        {/* giant logo placeholder */}
-        <div className="text-9xl text-accent/20 font-black">AUR</div>
+    <div className="h-screen flex items-center justify-center bg-black relative overflow-hidden">
+      {/* subtle circuit background */}
+      <div className="absolute inset-0 opacity-10 bg-[url('/circuits.svg')] bg-center bg-cover" />
+      {/* big glowing title */}
+      <div className="absolute top-20 w-full text-center">
+        <h1 className="text-6xl font-extrabold text-accent drop-shadow-lg">AUR EdenTech</h1>
+        <p className="mt-2 text-accent2 text-sm tracking-wide">
+          Accesso evolutivo · solo su richiesta · per merito o riconoscimento
+        </p>
       </div>
-      <div className="relative bg-black/60 border border-accent2 rounded-xl p-8 w-full max-w-md glass">
-        <h1 className="text-3xl text-accent2 mb-4 text-center">Accesso Evolutivo</h1>
+      <div className="relative bg-black/70 border border-accent2 rounded-xl p-10 w-full max-w-lg glass shadow-lg">
+        <h2 className="text-2xl text-accent2 mb-4 text-center">
+          Accesso tramite sequenza personale
+        </h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             value={sequence}
             onChange={(e) => setSequence(e.target.value)}
             disabled={loading}
             className="w-full px-4 py-2 bg-[#111] border border-accent2 rounded transition focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
-            placeholder="Sequence ID"
+            placeholder="Sequenza"
           />
           {errorMsg && <p className="text-accent animate-pulse text-sm">{errorMsg}</p>}
           <button

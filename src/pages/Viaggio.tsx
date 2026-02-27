@@ -84,7 +84,7 @@ export const Viaggio: React.FC = () => {
   }
 
   return (
-    <div className="pt-20 pl-64 pr-64 pb-4">
+    <div className="pt-20 px-6 pb-4">
       <h1 className="text-accent2 text-2xl mb-4">Viaggio</h1>
       <div className="bg-card border border-accent2 p-4 rounded-lg mb-6">
         <h2 className="text-accent2 font-semibold mb-2">Nuovo viaggio</h2>

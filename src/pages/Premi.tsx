@@ -22,7 +22,7 @@ export const Premi: React.FC = () => {
   }, [])
 
   return (
-    <div className="pt-20 pl-64 pr-64 pb-4">
+    <div className="pt-20 px-6 pb-4">
       <h1 className="text-accent2 text-2xl mb-4">Premi</h1>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {badges.map((b) => (

@@ -6,7 +6,7 @@ export const Balance: React.FC = () => {
   const user = useAuthStore((s) => s.user)
 
   return (
-    <div className="pt-20 pl-64 pr-64 pb-4">
+    <div className="pt-20 px-6 pb-4">
       <h1 className="text-accent2 text-2xl">Saldo Cancellieri</h1>
       {user ? (
         <div className="max-w-xs">

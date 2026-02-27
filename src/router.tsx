@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { Login } from './pages/Login'
 import { Totalita } from './pages/Totalita'
 import { Forum } from './pages/Forum'
@@ -14,7 +14,6 @@ import { ProtectedRoute } from './components/common/ProtectedRoute'
 import { MainLayout } from './components/layout/MainLayout'
 
 export const AppRouter: React.FC = () => (
-  <BrowserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
       {/* catch-all protected routes */}
@@ -41,7 +40,6 @@ export const AppRouter: React.FC = () => (
         }
       />
     </Routes>
-  </BrowserRouter>
 )
 
 export default AppRouter

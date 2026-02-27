@@ -21,7 +21,7 @@ export const Search: React.FC = () => {
   }, [query])
 
   return (
-    <div className="pt-20 pl-64 pr-64 pb-4">
+    <div className="pt-20 px-6 pb-4">
       <h1 className="text-accent2 text-2xl">Ricerca</h1>
       <input
         value={query}

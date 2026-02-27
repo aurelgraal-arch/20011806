@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --bg: #0f172a;      /* dark navy background for whole app (not pure black) */
-  --card: #111111;    /* slightly lighter than pure black for cards/inputs */
-  --accent: #50C878;  /* emerald green */
-  --accent2: #FFD700; /* gold */
-  --text: #e2e8f0;    /* off-white text color */
+  --bg: #05070d;      /* deep black/navy background */
+  --card: #0f172a;    /* dark card color */
+  --accent: #10b981;  /* emerald green accent */
+  --accent2: #FFD700; /* gold accent */
+  --text: #e5e7eb;    /* light gray text */
 }
 
 /* Light theme override (toggleable) */
@@ -71,6 +71,9 @@ body::before {
 /* hover/active glows */
 .hover-emerald:hover {
   box-shadow: 0 0 12px var(--accent);
+}
+.active-gold:active {
+  box-shadow: 0 0 12px var(--accent2);
 }
 .active-gold:active {
   box-shadow: 0 0 12px var(--accent2);

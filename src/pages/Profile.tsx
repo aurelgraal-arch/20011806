@@ -63,7 +63,7 @@ export const Profile: React.FC = () => {
   }
 
   return (
-    <div className="pt-20 pl-64 pr-64 pb-4">
+    <div className="pt-20 px-6 pb-4">
       <h1 className="text-accent2 text-2xl mb-4">Profilo</h1>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Identità block */}
