@@ -31,16 +31,17 @@ export const Viaggio: React.FC = () => {
 
   const createTrip = async () => {
     if (!user) return
-    await supabase.functions.invoke('dynamic-task', {
-      body: {
-        sequence_id: user.sequence_id,
-        action: 'create_journey_step',
+    // Insert journey step directly into `journey_steps`
+    await supabase.from('journey_steps').insert([
+      {
+        user_id: user.id,
         title,
-        itinerary,
+        reflection: itinerary,
         description,
-        timestamp: new Date().toISOString(),
+        media_url: '',
+        media_type: '',
       },
-    })
+    ])
     setTitle('')
     setItinerary('')
     setDescription('')
@@ -48,14 +49,16 @@ export const Viaggio: React.FC = () => {
 
   const toggleJoin = async (tripId: string, joined: boolean) => {
     if (!user) return
-    await supabase.functions.invoke('dynamic-task', {
-      body: {
-        sequence_id: user.sequence_id,
-        action: joined ? 'leave_trip' : 'join_trip',
-        trip_id: tripId,
-        timestamp: new Date().toISOString(),
-      },
-    })
+    try {
+      // Update participants array on journey_steps table
+      // Fetch current participants from the trip (client-side provided)
+      const { data: current } = await supabase.from('journey_steps').select('participants').eq('id', tripId).single()
+      const participants: string[] = (current?.participants as string[]) || []
+      const newParticipants = joined ? participants.filter((p) => p !== user.id) : Array.from(new Set([...participants, user.id]))
+      await supabase.from('journey_steps').update({ participants: newParticipants }).eq('id', tripId)
+    } catch (err) {
+      console.error('toggleJoin error', err)
+    }
   }
 
   return (

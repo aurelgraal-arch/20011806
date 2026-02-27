@@ -21,22 +21,21 @@ class AuthService {
 
   async loginWithHash(hash: string): Promise<AuthUser> {
     try {
-      const { data, error } = await supabase.functions.invoke('dynamic-task', {
-        body: { sequence_id: hash },
-      })
-      
+      // Use RPC verify_sequence instead of edge function
+      const { data, error } = await supabase.rpc('verify_sequence', { sequence_input: hash })
       if (error) throw new Error(error.message)
-      
-      const response = data as EdgeResponse
-      if (!response.valid || !response.user) {
-        throw new Error('Invalid access sequence')
-      }
 
+      const valid = (data && (data.valid === true || data === true)) || false
+      const userId = data?.user_id || data?.user?.id || null
+      if (!valid || !userId) throw new Error('Invalid access sequence')
+
+      const profileRes = await supabase.from('profiles').select('id, public_name, level').eq('id', userId).single()
+      const profile = profileRes.data
       const user: AuthUser = {
-        id: response.user.id,
-        sequence_id: response.user.sequence_id,
-        public_name: response.user.public_name,
-        level: response.user.level,
+        id: profile?.id || userId,
+        sequence_id: hash,
+        public_name: profile?.public_name || '',
+        level: profile?.level || 1,
       }
 
       // Store user in localStorage
@@ -62,17 +61,13 @@ class AuthService {
       if (!stored) return null
 
       const user = JSON.parse(stored) as AuthUser
-      
-      // Verify user is still valid by calling the edge function
-      const { data, error } = await supabase.functions.invoke('dynamic-task', {
-        body: { sequence_id: user.sequence_id },
-      })
-
-      if (error || !(data as EdgeResponse).valid) {
+      // Verify user via RPC
+      const { data, error } = await supabase.rpc('verify_sequence', { sequence_input: user.sequence_id })
+      const valid = data && (data.valid === true || data === true)
+      if (error || !valid) {
         localStorage.removeItem(this.STORAGE_KEY)
         return null
       }
-
       return user
     } catch (error) {
       localStorage.removeItem(this.STORAGE_KEY)

@@ -42,19 +42,18 @@ export const Forum: React.FC = () => {
 
   const submitPost = async () => {
     if (!user) return
-    await supabase.functions.invoke('dynamic-task', {
-      body: {
-        sequence_id: user.sequence_id,
-        action: 'create_forum_post',
+    // Insert directly into forum_posts table (no Edge Function)
+    await supabase.from('forum_posts').insert([
+      {
+        user_id: user.id,
         title,
         problem,
         solution,
         description,
         media_url: '',
         media_type: '',
-        timestamp: new Date().toISOString(),
       },
-    })
+    ])
     setTitle('')
     setProblem('')
     setSolution('')

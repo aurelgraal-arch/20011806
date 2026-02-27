@@ -31,30 +31,32 @@ export const useAuthStore = create<AuthState>()(
       login: async (sequence_id: string) => {
         set({ loading: true, error: null })
         try {
-          const { data, error } = await supabase.functions.invoke('dynamic-task', {
-            body: {
-              action: 'login',
-              sequence_id: sequence_id,
-            },
-          })
+          // Call RPC verify_sequence as required by platform rules
+          const { data, error } = await supabase.rpc('verify_sequence', { sequence_input: sequence_id })
           if (error) throw error
-          if (!data?.valid) {
+
+          // RPC should return an object with valid flag and optionally user_id
+          // Be tolerant: handle variations in RPC response shape
+          const valid = (data && (data.valid === true || data === true)) || false
+          const userId = data?.user_id || data?.user?.id || null
+
+          if (!valid) {
             throw new Error('Sequenza non valida')
           }
-          // dynamic-task now returns a user object when valid
-          // shape: { valid: true, user: { id, sequence_id, public_name, level, wallet_balance? } }
-          const returnedUser = data.user || {}
-          const userObj: AuthUser = {
-            id: returnedUser.id,
-            sequence_id: returnedUser.sequence_id || sequence_id,
-            public_name: returnedUser.public_name || '',
-            level: returnedUser.level || 1,
+
+          // If RPC returned a user id, fetch profile; otherwise create minimal user
+          if (userId) {
+            const { data: profile, error: profErr } = await supabase.from('profiles').select('id, public_name, level').eq('id', userId).single()
+            if (profErr) {
+              // fallback to minimal user object
+              set({ user: { id: userId, sequence_id, public_name: '', level: 1 }, isAuthenticated: true })
+            } else {
+              set({ user: { id: profile.id, sequence_id, public_name: profile.public_name || '', level: profile.level || 1 }, isAuthenticated: true })
+            }
+          } else {
+            // no user id returned; use a minimal session object
+            set({ user: { id: sequence_id, sequence_id, public_name: '', level: 1 }, isAuthenticated: true })
           }
-          // include optional wallet_balance if provided
-          if ('wallet_balance' in returnedUser) {
-            ;(userObj as any).wallet_balance = returnedUser.wallet_balance
-          }
-          set({ user: userObj, isAuthenticated: true })
         } catch (err: any) {
           set({ error: err.message || 'Login failed' })
           throw err

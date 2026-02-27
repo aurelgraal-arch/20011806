@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { supabase } from '../lib/supabase'
+import { useAuthStore } from '../store/authStore'
 import clsx from 'clsx'
 
 export const Login: React.FC = () => {
@@ -8,9 +8,11 @@ export const Login: React.FC = () => {
   const location = useLocation()
   const from = (location.state as any)?.from?.pathname || '/totalita'
 
+  const login = useAuthStore((s) => s.login)
+  const loading = useAuthStore((s) => s.loading)
+  const authError = useAuthStore((s) => s.error)
   const [sequence, setSequence] = useState('')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -21,28 +23,12 @@ export const Login: React.FC = () => {
       return
     }
 
-    setLoading(true)
+    setErrorMsg('')
     try {
-      const { data, error } = await supabase.rpc('verify_sequence', {
-        input_code: sequence.trim(),
-      })
-
-      console.log('DATA:', data)
-      console.log('ERROR:', error)
-
-      if (error || !data) {
-        setErrorMsg('Sequenza non valida')
-        return
-      }
-
-      localStorage.setItem('auth', 'true')
-      localStorage.setItem('sequence_id', sequence.trim())
-
+      await login(sequence.trim())
       navigate(from, { replace: true })
     } catch (err: any) {
-      setErrorMsg(err.message || 'Errore di login')
-    } finally {
-      setLoading(false)
+      setErrorMsg(err.message || authError || 'Errore di login')
     }
   }
 
