@@ -1,33 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #05070d;      /* deep black/navy background */
-  --card: #0f172a;    /* dark card color */
+  --bg: #030712;      /* deep deep navy background */
+  --card: #0b0f1a;    /* dark card color */
   --accent: #10b981;  /* emerald green accent */
-  --accent2: #FFD700; /* gold accent */
+  --accent2: #d4af37; /* gold accent - brighter */
   --text: #e5e7eb;    /* light gray text */
+  --spacing-lg: 32px;
+  --spacing-md: 24px;
+  --navbar-height: 72px;
 }
 
 /* Light theme override (toggleable) */
 [data-theme="light"] {
   --bg: #f0f2f5;
   --card: #ffffff;
-  --accent: #50C878;
-  --accent2: #FFD700;
+  --accent: #10b981;
+  --accent2: #d4af37;
   --text: #1f2937;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: var(--bg);
   color: var(--text);
+  letter-spacing: 0.3px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
 }
 
 input:focus {
@@ -41,21 +50,34 @@ input:focus {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.5);
+  background: rgba(11, 15, 26, 0.5);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(71, 85, 105, 0.5);
+  background: rgba(212, 175, 55, 0.3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(71, 85, 105, 0.8);
+  background: rgba(212, 175, 55, 0.6);
 }
 
 /* Utility classes */
 .glass {
   @apply backdrop-blur-xl bg-black/40 border border-accent2;
+}
+
+/* Card styles */
+.card {
+  background-color: var(--card);
+  border-radius: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--accent2);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.15), inset 0 0 20px rgba(16, 185, 129, 0.05);
 }
 
 /* circuits background */
@@ -64,19 +86,22 @@ body::before {
   position: fixed;
   inset: 0;
   background: url('/circuits.svg') center/cover no-repeat;
-  opacity: 0.05;
+  opacity: 0.03;
   pointer-events: none;
+  z-index: 0;
 }
 
 /* hover/active glows */
 .hover-emerald:hover {
-  box-shadow: 0 0 12px var(--accent);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
 }
-.active-gold:active {
-  box-shadow: 0 0 12px var(--accent2);
+
+.glow-gold {
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
-.active-gold:active {
-  box-shadow: 0 0 12px var(--accent2);
+
+.glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
 }
 
 .gradient-text {
@@ -86,6 +111,7 @@ body::before {
 .card-hover {
   @apply hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300;
 }
+
 /* Toast animation */
 @keyframes slideIn {
   from {

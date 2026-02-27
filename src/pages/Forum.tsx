@@ -85,11 +85,12 @@ export const Forum: React.FC = () => {
   }
 
   return (
-    <div className="pt-20 px-6 pb-4">
-      <h1 className="text-accent2 text-2xl mb-4">Forum</h1>
-      {/* creation form */}
-      <div className="bg-card border border-accent2 p-4 rounded-lg mb-6">
-        <h2 className="text-accent2 font-semibold mb-2">Nuovo post</h2>
+    <div className="pt-[var(--spacing-lg)] px-[var(--spacing-lg)] pb-[var(--spacing-lg)]">
+      <div className="max-w-[1400px] mx-auto">
+        <h1 className="text-4xl font-black text-accent2 mb-8 tracking-wide">FORUM</h1>
+        {/* creation form */}
+        <div className="card p-8 mb-8">
+          <h2 className="text-2xl font-black text-accent2 mb-6 tracking-wide">Nuovo post</h2>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -143,6 +144,7 @@ export const Forum: React.FC = () => {
           </div>
         ))
       )}
+      </div>
     </div>
   )
 }

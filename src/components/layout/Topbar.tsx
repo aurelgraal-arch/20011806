@@ -16,35 +16,54 @@ const ITEMS = [
 ]
 
 export const Topbar: React.FC = () => {
+  const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
+
   return (
-    <header className="h-16 bg-black border-b border-accent2 flex items-center px-6 fixed top-0 left-0 right-0 z-50">
-      <nav className="flex space-x-6">
-        {ITEMS.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              isActive
-                ? 'text-accent underline'
-                : 'text-accent2 hover:text-accent transition'
-            }
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/80 border-b border-accent2/30">
+      <div className="h-[var(--navbar-height)] flex items-center px-[var(--spacing-lg)] max-w-[1400px] mx-auto w-full justify-between">
+        {/* LEFT: Logo */}
+        <div className="text-xl font-black text-accent2 tracking-wider min-w-fit">
+          AUR
+        </div>
+
+        {/* CENTER: Navigation */}
+        <nav className="flex space-x-8 flex-1 justify-center">
+          {ITEMS.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `text-sm font-semibold transition-all duration-200 ${
+                  isActive
+                    ? 'text-accent2 border-b-2 border-accent2 pb-1'
+                    : 'text-accent2/70 hover:text-accent hover:glow-emerald'
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* RIGHT: User Info & Logout */}
+        <div className="flex items-center gap-6 min-w-fit">
+          {user && (
+            <div className="text-right">
+              <p className="text-xs text-accent2/60">Lv. {user.public_name || 'User'}</p>
+            </div>
+          )}
+          <button
+            onClick={() => {
+              logout()
+              navigate('/login', { replace: true })
+            }}
+            className="text-xs font-semibold text-accent2 hover:text-accent transition-colors duration-200"
           >
-            {item.label}
-          </NavLink>
-        ))}
-      </nav>
-      <div className="ml-auto">
-        <button
-          onClick={() => {
-            logout()
-            navigate('/login', { replace: true })
-          }}
-          className="text-accent2 hover:text-accent transition"
-        >
-          LOGOUT
-        </button>
+            LOGOUT
+          </button>
+        </div>
       </div>
     </header>
   )
