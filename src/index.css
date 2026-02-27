@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --bg: #000000;      /* black background for whole app */
+  --bg: #0f172a;      /* dark navy background for whole app (not pure black) */
   --card: #111111;    /* slightly lighter than pure black for cards/inputs */
   --accent: #50C878;  /* emerald green */
   --accent2: #FFD700; /* gold */

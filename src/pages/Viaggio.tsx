@@ -39,7 +39,7 @@ export const Viaggio: React.FC = () => {
       let media_type = ''
       if (mediaFile) {
         const filename = `${crypto.randomUUID()}_${mediaFile.name}`
-        const { data: uploadData, error: uploadError } = await supabase.storage.from('posts-media').upload(filename, mediaFile)
+        const { error: uploadError } = await supabase.storage.from('posts-media').upload(filename, mediaFile)
         if (uploadError) {
           console.error('Upload error', uploadError)
         } else {

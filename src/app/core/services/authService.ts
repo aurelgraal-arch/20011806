@@ -6,16 +6,6 @@
 import { supabase } from '../../../lib/supabase'
 import type { AuthUser, SignUpData } from '../../types'
 
-interface EdgeResponse {
-  valid: boolean
-  user?: {
-    id: string
-    sequence_id: string
-    public_name: string
-    level: number
-  }
-}
-
 class AuthService {
   private readonly STORAGE_KEY = 'auth_user'
 
