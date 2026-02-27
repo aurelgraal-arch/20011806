@@ -9,7 +9,7 @@ export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }
       <Sidebar />
       <Topbar />
       <RightPanel />
-      <main className="pt-16 pl-60 pr-60">{children}</main>
+      <main className="pt-16 pl-0 md:pl-60 pr-0 lg:pr-60">{children}</main>
     </div>
   )
 }

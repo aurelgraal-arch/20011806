@@ -17,12 +17,14 @@ export const AppRouter: React.FC = () => (
   <BrowserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
+      {/* catch-all protected routes */}
       <Route
         path="/*"
         element={
           <ProtectedRoute>
             <MainLayout>
               <Routes>
+                <Route path="dashboard" element={<Navigate to="/totalita" replace />} />
                 <Route path="totalita" element={<Totalita />} />
                 <Route path="forum" element={<Forum />} />
                 <Route path="viaggio" element={<Viaggio />} />

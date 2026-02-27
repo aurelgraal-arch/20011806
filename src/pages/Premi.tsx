@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { Badge } from '../components/ui/Badge'
 
 interface Badge {
   id: string
@@ -33,7 +34,8 @@ export const Premi: React.FC = () => {
             }
           >
             <h3 className="text-accent2 font-semibold">{b.name}</h3>
-            <p className="text-accent2/70 text-sm">{b.description}</p>
+            <p className="text-accent2/70 text-sm mb-2">{b.description}</p>
+            <Badge label={b.unlocked ? 'Sbloccato' : 'Bloccato'} variant={b.unlocked ? 'success' : 'warning'} />
           </div>
         ))}
         {badges.length === 0 && (

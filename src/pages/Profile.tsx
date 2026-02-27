@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { supabase } from '../lib/supabase'
 import { ensureBaseNetwork } from '../lib/wallet'
+import { Avatar } from '../components/ui/Avatar'
+import { StatCard } from '../components/ui/StatCard'
 
 export const Profile: React.FC = () => {
   const user = useAuthStore((s) => s.user)
@@ -63,10 +65,17 @@ export const Profile: React.FC = () => {
   return (
     <div className="pt-20 pl-64 pr-64 pb-4">
       <h1 className="text-accent2 text-2xl mb-4">Profilo</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="flex flex-col md:flex-row gap-8">
         {/* Identità block */}
-        <section className="bg-card border border-accent2 p-4 rounded-lg">
+        <section className="bg-card border border-accent2 p-4 rounded-lg flex-1">
           <h2 className="text-accent2 font-semibold mb-2">Identità</h2>
+          <div className="flex items-center gap-4 mb-4">
+            <Avatar name={user?.public_name || ''} size="lg" />
+            <div>
+              <p className="text-accent2 font-bold">{user?.public_name || 'Anonimo'}</p>
+              <p className="text-accent2 text-sm">Sequence ID: {user?.sequence_id}</p>
+            </div>
+          </div>
           <div className="mb-2">
             <label className="block text-accent2 text-sm">Nome pubblico</label>
             <input
@@ -81,16 +90,15 @@ export const Profile: React.FC = () => {
               Salva nome
             </button>
           </div>
-          <div>
-            <p className="text-accent2 text-sm">Sequence ID: {user?.sequence_id}</p>
-          </div>
         </section>
 
-        {/* Evolution block placeholder */}
-        <section className="bg-card border border-accent2 p-4 rounded-lg">
+        {/* Evolution block */}
+        <section className="bg-card border border-accent2 p-4 rounded-lg flex-1">
           <h2 className="text-accent2 font-semibold mb-2">Evoluzione</h2>
-          {/* level bar, coins, posts count etc could be fetched via rpc */}
-          <p className="text-accent2/70 text-sm">Livello: {user?.level}</p>
+          <div className="grid grid-cols-1 gap-4">
+            <StatCard label="Livello" value={user?.level || 0} />
+            <StatCard label="XP" value={user?.level ? user?.level * 100 : 0} />
+          </div>
         </section>
       </div>
       {/* additional blocks (customization, activity, wallet) would follow similarly */}

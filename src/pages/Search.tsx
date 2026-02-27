@@ -1,4 +1,5 @@
 import React from 'react'
+import { supabase } from '../lib/supabase'
 
 export const Search: React.FC = () => {
   const [query, setQuery] = React.useState('')
