@@ -8,6 +8,7 @@ import { AppRouter } from './router'
 import { AuthHeader } from './components/AuthHeader'
 import { useAuthStore } from './store/authStore'
 import { useThemeStore } from './store/themeStore'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 export default function App() {
   const restore = useAuthStore((s) => s.restoreSession)
@@ -27,9 +28,9 @@ export default function App() {
   }, [theme])
 
   return (
-    <>
+    <ErrorBoundary>
       <AuthHeader />
       <AppRouter />
-    </>
+    </ErrorBoundary>
   )
 }
