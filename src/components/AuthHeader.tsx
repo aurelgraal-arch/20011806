@@ -11,6 +11,7 @@ export const AuthHeader: React.FC = () => {
     navigate('/login', { replace: true })
   }
 
+
   if (!sequence) return null
 
   return (

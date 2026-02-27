@@ -1,0 +1,19 @@
+* [33m0180758[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mstable-checkpoint[m[33m)[m refactor: centralize login to RPC verify_sequence and remove legacy auth flows
+* [33mba6d621[m[33m ([m[1;33mtag: [m[1;33mv0.1-platform-checkpoint[m[33m, [m[1;31morigin/stable-checkpoint[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m CHECKPOINT: frontend platform architecture completed, auth hash flow, dashboard structure, services connected
+* [33mecbe896[m Update vite.config.ts
+* [33m4403ab5[m Update package.json
+* [33mca1dd47[m Update index.css
+* [33me19a35d[m Create Login.tsx
+* [33m2a6021d[m Create Portale.tsx
+* [33mf5fe5dc[m Update index.css
+* [33m4e3a2a5[m Update main.tsx
+* [33m8f25106[m Update package.json
+* [33me1bdaae[m Update index.html
+* [33m98e006c[m Update App.tsx
+* [33m80aae15[m Update supabaseClient.ts
+* [33mdc72fbd[m Update package.json
+* [33m6fd9a7d[m Update package.json
+* [33m62523c9[m Update main.tsx
+* [33mb9a0901[m Update App.tsx
+* [33m9b805f1[m Update supabaseClient.ts
+* [33mec1838f[m Initial commit
